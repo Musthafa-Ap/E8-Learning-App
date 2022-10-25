@@ -2,34 +2,33 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:nuox_project/authentication/forgot.dart';
 import 'package:nuox_project/authentication/signup.dart';
+import 'package:nuox_project/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 import '../constants/constants.dart';
-import '../my_home_page.dart';
+import '../providers/auth_provider.dart';
 import 'mobile_number_verification_page.dart';
 
-class LoginWidget extends StatelessWidget {
+class LoginPage extends StatelessWidget {
   final _globalKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   @override
-  @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
         backgroundColor: Colors.black,
         body: SafeArea(
           child: Form(
             key: _globalKey,
             child: ListView(
+              physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.all(20),
               children: [
-                //  const CircleAvatar(
-                // backgroundColor: Colors.black,
-                // radius: 150,
-                // backgroundImage: NetworkImage(
-                //     "https://www.timeshighereducation.com/sites/default/files/styles/the_breaking_news_image_style/public/istock-1213470247_0.jpg?itok=VZUWOAHL")),
                 const SizedBox(
                   height: 30,
                 ),
                 TextFormField(
+                  keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
                   decoration: InputDecoration(
                       fillColor: Colors.white,
@@ -45,6 +44,7 @@ class LoginWidget extends StatelessWidget {
                 ),
                 KHeight,
                 TextFormField(
+                  obscureText: true,
                   controller: _passwordController,
                   decoration: InputDecoration(
                       fillColor: Colors.white,
@@ -52,6 +52,11 @@ class LoginWidget extends StatelessWidget {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
                       hintText: "Password"),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (password) =>
+                      password != null && password.length < 8
+                          ? "Enter min. 8 characters"
+                          : null,
                 ),
                 const SizedBox(
                   height: 25,
@@ -68,13 +73,25 @@ class LoginWidget extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10)),
                         )),
                     onPressed: () {
-                      onLoginButtonPressed(context);
+                      if (_globalKey.currentState!.validate()) {
+                        authProvider.login(
+                            context: context,
+                            email: _emailController.text
+                                .trim()
+                                .toString()
+                                .toLowerCase(),
+                            password: _passwordController.text.toString());
+                      }
                     },
-                    child: const Text(
-                      "Log in",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    )),
+                    child: authProvider.isLoading
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.black,
+                            ),
+                          )
+                        : Text("Login",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold))),
                 const SizedBox(
                   height: 25,
                 ),
@@ -94,7 +111,7 @@ class LoginWidget extends StatelessWidget {
                     },
                   ),
                 ),
-/////////////
+
                 KHeight20,
                 Row(
                   children: [
@@ -202,18 +219,5 @@ class LoginWidget extends StatelessWidget {
             ),
           ),
         ));
-  }
-
-  void onLoginButtonPressed(context) {
-    final _email = _emailController.text;
-    final _password = _passwordController.text;
-    if (_email.isNotEmpty && _password.isNotEmpty) {
-      if (_email == _password) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => MyHomePage()));
-      }
-    } else {
-      return;
-    }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nuox_project/constants/constants.dart';
 
-import '../../../widgets/oulined_text_field_widget.dart';
+import '../../../../widgets/oulined_text_field_widget.dart';
 
 ValueNotifier<String> selectedGender = ValueNotifier("");
 

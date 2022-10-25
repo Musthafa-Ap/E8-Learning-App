@@ -1,8 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:nuox_project/authentication/login.dart';
-
+import '../providers/auth_provider.dart';
 import '../constants/constants.dart';
+import 'package:provider/provider.dart';
 
 class SignUpWidget extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -12,6 +13,7 @@ class SignUpWidget extends StatelessWidget {
   final _numberController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -46,9 +48,11 @@ class SignUpWidget extends StatelessWidget {
               ),
               KHeight,
               TextFormField(
+                keyboardType: TextInputType.number,
                 controller: _numberController,
                 cursorColor: Colors.black,
                 decoration: InputDecoration(
+                  errorText: authProvider.mobile_error,
                   fillColor: Colors.white,
                   filled: true,
                   hintText: "Mobile Number",
@@ -62,9 +66,11 @@ class SignUpWidget extends StatelessWidget {
               ),
               KHeight,
               TextFormField(
+                  keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
                   cursorColor: Colors.black,
                   decoration: InputDecoration(
+                      errorText: authProvider.email_error,
                       fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(
@@ -86,8 +92,8 @@ class SignUpWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10)),
                     hintText: "Password"),
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (password) => password != null && password.length < 6
-                    ? "Enter min. 6 characters"
+                validator: (password) => password != null && password.length < 8
+                    ? "Enter min. 8 characters"
                     : null,
               ),
               const SizedBox(
@@ -105,12 +111,25 @@ class SignUpWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10)),
                       )),
                   onPressed: () {
-                    onsingupButtonPressed();
+                    final istrue = _formKey.currentState!.validate();
+                    if (istrue) {
+                      authProvider.registration(
+                          context: context,
+                          email: _emailController.text.toString().toLowerCase(),
+                          number: _numberController.text.toString(),
+                          name: _nameController.text.toString(),
+                          password: _passwordController.text.toString());
+                    }
                   },
-                  child: const Text(
-                    "Sign Up",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  )),
+                  child: authProvider.isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.black,
+                          ),
+                        )
+                      : Text("Sign up",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold))),
 
               KHeight20,
               Row(
@@ -195,8 +214,8 @@ class SignUpWidget extends StatelessWidget {
                   KWidth5,
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => LoginWidget()));
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => LoginPage()));
                     },
                     child: const Text(
                       "Sign in",
@@ -216,8 +235,5 @@ class SignUpWidget extends StatelessWidget {
     );
   }
 
-  void onsingupButtonPressed() {
-    final istrue = _formKey.currentState!.validate();
-    print(istrue.toString());
-  }
+  void onsingupButtonPressed() {}
 }

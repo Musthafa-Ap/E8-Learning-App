@@ -1,6 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:nuox_project/authentication/verification_code_submission_page.dart';
+import 'package:nuox_project/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPassword extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -9,6 +11,7 @@ class ForgotPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -36,6 +39,7 @@ class ForgotPassword extends StatelessWidget {
               height: 70,
             ),
             TextFormField(
+              keyboardType: TextInputType.emailAddress,
               controller: _emailController,
               decoration: InputDecoration(
                   fillColor: Colors.white,
@@ -44,10 +48,11 @@ class ForgotPassword extends StatelessWidget {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10))),
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (email) =>
-                  email != null && !EmailValidator.validate(email)
-                      ? "Enter a valid Email"
-                      : null,
+              validator: (email) => email == null ||
+                      email.isEmpty ||
+                      !EmailValidator.validate(email)
+                  ? "Enter a valid Email"
+                  : null,
             ),
             const SizedBox(
               height: 30,
@@ -64,8 +69,11 @@ class ForgotPassword extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10)),
                     )),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => VerificationCodeSubmissionPage()));
+                  if (_formKey.currentState!.validate()) {
+                    authProvider.forgotPassword(
+                        context: context,
+                        emailforOTP: _emailController.text.trim().toString());
+                  }
                 },
                 icon: const Icon(
                   Icons.email_outlined,

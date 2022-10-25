@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nuox_project/pages/account/sections/faq_page.dart';
+import 'package:nuox_project/pages/account/sections/support/faq_page.dart';
 
 class ListTileAccountPage extends StatelessWidget {
   final Widget navigatorPage;

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:nuox_project/pages/account/sections/profile_edit_page.dart';
-
-import '../../../constants/constants.dart';
+import 'package:nuox_project/pages/account/sections/profile/profile_edit_page.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../../../constants/constants.dart';
 
 class UserDetailesSection extends StatelessWidget {
-  const UserDetailesSection({super.key});
-
-  @override
+  UserDetailesSection({super.key});
   Widget build(BuildContext context) {
     return Column(
       children: [

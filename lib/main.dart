@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:nuox_project/my_home_page.dart';
+import 'package:nuox_project/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 import 'authentication/login.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
+      child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -16,7 +20,7 @@ class MyApp extends StatelessWidget {
             backgroundColor: Colors.black,
           )),
       debugShowCheckedModeBanner: false,
-      home: LoginWidget(),
+      home: LoginPage(),
     );
   }
 }

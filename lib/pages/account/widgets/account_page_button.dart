@@ -15,7 +15,7 @@ class AccountPageButton extends StatelessWidget {
                 MaterialStateProperty.all(Color.fromARGB(0, 40, 39, 39))),
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => LoginWidget()));
+              .push(MaterialPageRoute(builder: (context) => LoginPage()));
         },
         child: Text(
           buttontitle,

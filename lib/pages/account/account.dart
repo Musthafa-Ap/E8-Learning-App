@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nuox_project/constants/constants.dart';
-import 'package:nuox_project/pages/account/sections/faq_page.dart';
+import 'package:nuox_project/pages/account/sections/support/faq_page.dart';
 import 'listtile_account_page.dart';
 import 'widgets/account_page_button.dart';
 import 'widgets/small_heading_account_page.dart';
-import 'sections/user_detailes_section.dart';
+import 'sections/profile/user_detailes_section.dart';
 
 class Account extends StatelessWidget {
   const Account({super.key});

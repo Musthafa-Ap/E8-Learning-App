@@ -33,6 +33,11 @@ dependencies:
     sdk: flutter
   email_validator:
   share_plus:
+  image_picker:
+  provider:
+  google_sign_in:
+  http:
+  shared_preferences:
   
 
 

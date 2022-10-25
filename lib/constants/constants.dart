@@ -21,3 +21,4 @@ const KWidth10 = SizedBox(
 const KWidth30 = SizedBox(
   width: 30,
 );
+const String countryCode = "+91";
