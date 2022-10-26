@@ -35,6 +35,7 @@ class LoginPage extends StatelessWidget {
                       filled: true,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
+                      errorText: authProvider.login_email_error,
                       hintText: "Email"),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (email) =>
@@ -47,6 +48,7 @@ class LoginPage extends StatelessWidget {
                   obscureText: true,
                   controller: _passwordController,
                   decoration: InputDecoration(
+                      errorText: authProvider.login_pass_error,
                       fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(

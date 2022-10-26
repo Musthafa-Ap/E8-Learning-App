@@ -5,13 +5,16 @@ import 'package:http/http.dart';
 import 'package:nuox_project/authentication/moblie_number_otp_submission_page.dart';
 import 'package:nuox_project/authentication/otp_verification_page.dart';
 import 'package:nuox_project/constants/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../authentication/login.dart';
 import '../my_home_page.dart';
 
 class AuthProvider with ChangeNotifier {
   var mobile_error;
-
   var email_error;
+  var login_email_error;
+  var login_pass_error;
+
   bool isLoading = false;
   setLoading(bool value) {
     isLoading = value;
@@ -130,21 +133,35 @@ class AuthProvider with ChangeNotifier {
           body: {'email': email, 'password': password});
 
       if (response.statusCode == 200) {
+        login_email_error = null;
+        login_pass_error = null;
         var data = jsonDecode(response.body);
         print(data['result'].toString());
 
         if (data['result'] == "success") {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => MyHomePage()));
-          print("Successfull");
+          final sharedPrefs = await SharedPreferences.getInstance();
+          await sharedPrefs.setBool("isLogged", true);
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => MyHomePage()),
+            (route) => false,
+          );
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: Colors.green, content: Text(data['result'])));
           setLoading(false);
-        } else {
+        } else if (data['result'] == "failure") {
+          print(data.toString());
+          Map<String, dynamic> error = data['errors'];
+          if (error.containsKey('email')) {
+            login_email_error = error['email'];
+          } else {
+            login_email_error = null;
+          }
+          if (error.containsKey('password')) {
+            login_pass_error = error['password'];
+          } else {
+            login_pass_error = null;
+          }
           setLoading(false);
-          print(data['errors']);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              backgroundColor: Colors.red, content: Text(data['result'])));
         }
       } else {
         print("failed");
@@ -181,8 +198,9 @@ class AuthProvider with ChangeNotifier {
         email_error = null;
         mobile_error = null;
         setLoading(false);
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => LoginPage()));
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => MyHomePage()),
+            (route) => false);
       } else if (data['status_code'] == 400) {
         Map<String, dynamic> error_message = data['message'];
 

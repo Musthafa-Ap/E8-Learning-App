@@ -1,6 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:nuox_project/authentication/login.dart';
+import 'package:nuox_project/authentication/mobile_number_verification_page.dart';
 import '../providers/auth_provider.dart';
 import '../constants/constants.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +50,7 @@ class SignUpWidget extends StatelessWidget {
               ),
               KHeight,
               TextFormField(
+                inputFormatters: [LengthLimitingTextInputFormatter(10)],
                 keyboardType: TextInputType.number,
                 controller: _numberController,
                 cursorColor: Colors.black,
@@ -83,6 +86,7 @@ class SignUpWidget extends StatelessWidget {
                           : null),
               KHeight,
               TextFormField(
+                obscureText: true,
                 controller: _passwordController,
                 cursorColor: Colors.black,
                 decoration: InputDecoration(
@@ -191,7 +195,10 @@ class SignUpWidget extends StatelessWidget {
               SizedBox(
                 height: 50,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => MobileNumberverificationPage()));
+                  },
                   child: const Text(
                     "Log in with Mobile number",
                     style: TextStyle(color: Colors.white, fontSize: 20),

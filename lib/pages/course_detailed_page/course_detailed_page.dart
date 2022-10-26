@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nuox_project/constants/constants.dart';
-import 'package:nuox_project/pages/review_page.dart/review_page.dart';
+import 'package:nuox_project/pages/review_page/review_page.dart';
 import 'package:nuox_project/widgets/bestseller.dart';
 import 'package:nuox_project/widgets/bold_heading.dart';
 import 'package:share_plus/share_plus.dart';
